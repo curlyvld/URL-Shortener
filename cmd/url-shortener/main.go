@@ -6,7 +6,9 @@ import (
 	"golang.org/x/exp/slog"
 	"net/http"
 	"os"
+	"time"
 	"url-shorteneer/internal/config"
+	"url-shorteneer/internal/https-server/handlers/redirect"
 	"url-shorteneer/internal/https-server/handlers/url/save"
 	"url-shorteneer/internal/https-server/middleware/logger"
 	"url-shorteneer/internal/lib/logger/handlers/slogpretty"
@@ -41,7 +43,16 @@ func main() {
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.URLFormat)
 
-	router.Post("/url", save.New(log, storage))
+	router.Route("/url", func(r chi.Router) {
+		r.Use(middleware.BasicAuth("url-shoreneer", map[string]string{
+			cfg.HTTPServer.User: cfg.HTTPServer.Password,
+		}))
+		r.Post("/", save.New(log, storage))
+
+	})
+
+	router.Get("/{alias}", redirect.New(log, storage))
+
 	log.Info("starting server", slog.String("address", cfg.Address))
 
 	srv := &http.Server{
