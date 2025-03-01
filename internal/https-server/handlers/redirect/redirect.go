@@ -2,14 +2,20 @@ package redirect
 
 import (
 	"errors"
+	"net/http"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/render"
-	"net/http"
-	resp "url-shorteneer/internal/lib/api/responce"
+	"golang.org/x/exp/slog"
+
+	resp "url-shorteneer/internal/lib/api/response"
 	"url-shorteneer/internal/lib/logger/sl"
+	"url-shorteneer/internal/storage"
 )
 
+// URLGetter is an interface for getting url by alias.
+//
 //go:generate go run github.com/vektra/mockery/v2@v2.28.2 --name=URLGetter
 type URLGetter interface {
 	GetURL(alias string) (string, error)
