@@ -51,32 +51,6 @@ http_server:
   password: "mypass"
 ```
 
-### Переменные окружения
-
-- `CONFIG_PATH` — путь к файлу конфигурации (обязательно)
-- `ENV` — окружение (local, dev, prod), по умолчанию "local"
-- `HTTP_SERVER_PASSWORD` — пароль для HTTP-сервера (опционально, можно указать в конфиге)
-
-## Запуск
-
-1. Установите переменную окружения `CONFIG_PATH`:
-```bash
-export CONFIG_PATH=./config/local.yaml
-```
-
-2. Запустите сервер:
-```bash
-go run cmd/url-shortener/main.go
-```
-
-Или соберите и запустите бинарный файл:
-```bash
-go build -o url-shortener cmd/url-shortener/main.go
-./url-shortener
-```
-
-Сервер будет доступен по адресу, указанному в конфигурации (по умолчанию `localhost:8082`).
-
 ## API
 
 ### Создание короткой ссылки
@@ -125,43 +99,6 @@ curl -L http://localhost:8082/example
 
 Или просто откройте в браузере: `http://localhost:8082/example`
 
-## Структура проекта
-
-```
-url-shorteneer/
-├── cmd/
-│   └── url-shortener/
-│       └── main.go              # Точка входа приложения
-├── config/
-│   └── local.yaml               # Конфигурационный файл
-├── internal/
-│   ├── config/
-│   │   └── config.go           # Конфигурация приложения
-│   ├── https-server/
-│   │   ├── handlers/
-│   │   │   ├── redirect/       # Обработчик редиректа
-│   │   │   └── url/
-│   │   │       └── save/       # Обработчик сохранения URL
-│   │   └── middleware/
-│   │       └── logger/         # Middleware для логирования
-│   ├── lib/
-│   │   ├── api/
-│   │   │   └── responce/      # Утилиты для ответов API
-│   │   ├── logger/            # Утилиты логирования
-│   │   └── random/            # Генерация случайных строк
-│   └── storage/
-│       ├── sqlite/            # Реализация хранилища на SQLite
-│       └── storage.go         # Интерфейс хранилища
-└── storage/
-    └── storage.db             # База данных SQLite
-```
-
-## Тестирование
-
-Запуск тестов:
-```bash
-go test ./...
-```
 
 ## Логирование
 
